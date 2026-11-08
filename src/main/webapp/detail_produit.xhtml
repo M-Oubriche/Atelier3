@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="title">Détail Produit</ui:define>
+
+    <ui:define name="content">
+        <p>
+            <h:link outcome="vitrine" value="&laquo; Retour à la vitrine" styleClass="btn"/>
+        </p>
+
+        <h:panelGroup rendered="#{vitrineBean.selectedProduit == null}">
+            <p>Aucun produit sélectionné. <h:link outcome="vitrine" value="Retourner à la vitrine" styleClass="btn" style="margin-left: 5px;"/></p>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{vitrineBean.selectedProduit != null}">
+            <h2>#{vitrineBean.selectedProduit.designation}</h2>
+
+            <table border="1" cellpadding="8" cellspacing="0" style="max-width: 600px;">
+                <tr>
+                    <th align="left" bgcolor="#f0f0f0">Catégorie</th>
+                    <td>#{vitrineBean.selectedProduit.categorie.nom}</td>
+                </tr>
+                <tr>
+                    <th align="left" bgcolor="#f0f0f0">Description</th>
+                    <td>#{vitrineBean.selectedProduit.description}</td>
+                </tr>
+                <tr>
+                    <th align="left" bgcolor="#f0f0f0">Prix</th>
+                    <td><strong>#{vitrineBean.selectedProduit.prix} DH</strong></td>
+                </tr>
+                <tr>
+                    <th align="left" bgcolor="#f0f0f0">Quantité en stock</th>
+                    <td>#{vitrineBean.selectedProduit.quantiteStock}</td>
+                </tr>
+                <tr>
+                    <th align="left" bgcolor="#f0f0f0">Commander</th>
+                    <td>
+                        <h:form>
+                            <label>Quantité : </label>
+                            <h:inputText type="number" value="#{vitrineBean.quantite}" style="width: 60px; margin-right: 5px;"/>
+                            <h:commandButton value="Ajouter au panier" action="#{vitrineBean.ajouterAuPanierDetail}"/>
+                        </h:form>
+                    </td>
+                </tr>
+            </table>
+        </h:panelGroup>
+    </ui:define>
+
+</ui:composition>

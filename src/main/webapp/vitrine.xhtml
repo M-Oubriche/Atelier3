@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="title">Vitrine - E-Commerce</ui:define>
+
+    <ui:define name="content">
+        <h2>Catalogue des Produits</h2>
+
+        <div style="margin-bottom: 20px;">
+            <!-- Formulaire de Recherche -->
+            <h:form style="display: inline-block; margin-right: 20px;">
+                <h:inputText value="#{vitrineBean.query}" placeholder="Rechercher un produit..."/>
+                <h:commandButton value="Rechercher" action="#{vitrineBean.rechercher}" style="margin-left: 5px;"/>
+                <h:commandLink value="Afficher tout" action="#{vitrineBean.afficherTout}"
+                               rendered="#{not empty vitrineBean.query or not empty vitrineBean.selectedCategorieId}"
+                               style="margin-left: 10px; color: #000;"/>
+            </h:form>
+
+            <!-- Formulaire de Filtrage par Catégorie -->
+            <h:form style="display: inline-block;">
+                <h:outputLabel for="catSelect" value="Catégorie : "/>
+                <h:selectOneMenu id="catSelect" value="#{vitrineBean.selectedCategorieId}" onchange="this.form.submit()">
+                    <f:selectItem itemValue="" itemLabel="-- Toutes les catégories --"/>
+                    <f:selectItems value="#{vitrineBean.categories}" var="c" itemValue="#{c.id}" itemLabel="#{c.nom}"/>
+                </h:selectOneMenu>
+            </h:form>
+        </div>
+
+        <h:panelGroup id="produitsPanel" layout="block">
+            <h:panelGroup rendered="#{empty vitrineBean.produits}">
+                <p>Aucun produit trouvé.</p>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not empty vitrineBean.produits}">
+                <h:form id="tableVitrineForm">
+                    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                        <thead>
+                            <tr bgcolor="#f0f0f0">
+                                <th>Photo</th>
+                                <th>Désignation</th>
+                                <th>Catégorie</th>
+                                <th>Description</th>
+                                <th>Prix</th>
+                                <th>Stock</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{vitrineBean.produits}" var="p">
+                                <tr>
+                                    <td align="center">
+                                        <h:panelGroup rendered="#{not empty p.photoUrl}">
+                                            <img src="#{p.photoUrl}" alt="#{p.designation}" width="60" height="60" style="object-fit: contain;"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup rendered="#{empty p.photoUrl}">
+                                            <span>N/A</span>
+                                        </h:panelGroup>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            <h:commandLink action="#{vitrineBean.voirDetail(p.id)}" value="#{p.designation}" style="color: #000;"/>
+                                        </strong>
+                                    </td>
+                                    <td>#{p.categorie.nom}</td>
+                                    <td>#{p.description}</td>
+                                    <td><strong>#{p.prix} DH</strong></td>
+                                    <td>#{p.quantiteStock}</td>
+                                    <td align="center">
+                                        <h:commandLink action="#{vitrineBean.ajouterAuPanierDirect(p)}" value="Ajouter au panier" styleClass="btn"/>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </h:form>
+            </h:panelGroup>
+        </h:panelGroup>
+
+    </ui:define>
+
+</ui:composition>
